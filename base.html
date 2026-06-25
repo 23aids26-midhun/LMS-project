@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Dashboard{% endblock %} – EduVerse LMS</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  {% block head %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- Flash Messages -->
+  <div class="flash-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+    <div class="flash-msg {{ category }}">
+      <span>{% if category == 'success' %}✅{% elif category == 'danger' %}❌{% elif category == 'warning' %}⚠️{% else
+        %}ℹ️{% endif %}</span>
+      <span>{{ message }}</span>
+      <span class="flash-close">×</span>
+    </div>
+    {% endfor %}
+    {% endwith %}
+  </div>
+
+  <!-- Sidebar Overlay (Mobile) -->
+  <div id="sidebar-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:99;"
+    onclick="this.style.display='none'; document.getElementById('app-sidebar').classList.remove('open');"></div>
+
+  <div class="app-layout">
+    <!-- ─── SIDEBAR ─── -->
+    <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">E</div>
+        <div class="sidebar-logo">Edu<em>Verse</em></div>
+      </div>
+
+      <div class="sidebar-user">
+        <div class="user-avatar">{{ session.user_name[0]|upper }}</div>
+        <div class="user-info">
+          <div class="name">{{ session.user_name }}</div>
+          <span class="role-badge {{ session.role }}">{{ session.role|capitalize }}</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        {% if session.role == 'student' %}
+        <div class="nav-group">
+          <div class="nav-group-label">Main</div>
+          <a href="/student/dashboard" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-home"></i></span> Dashboard
+          </a>
+          <a href="/student/courses" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-search"></i></span> Browse Courses
+          </a>
+          <a href="/student/my-courses" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-book-open"></i></span> My Courses
+          </a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Account</div>
+          <a href="/profile" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-user"></i></span> Profile
+          </a>
+        </div>
+        {% elif session.role == 'trainer' %}
+        <div class="nav-group">
+          <div class="nav-group-label">Main</div>
+          <a href="/trainer/dashboard" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-home"></i></span> Dashboard
+          </a>
+          <a href="/trainer/courses" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-book"></i></span> My Courses
+          </a>
+          <a href="/trainer/create-course" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-plus-circle"></i></span> Create Course
+          </a>
+          <a href="/trainer/students" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-users"></i></span> My Students
+          </a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Account</div>
+          <a href="/profile" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-user"></i></span> Profile
+          </a>
+        </div>
+        {% elif session.role == 'institute' %}
+        <div class="nav-group">
+          <div class="nav-group-label">Main</div>
+          <a href="/institute/dashboard" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-home"></i></span> Dashboard
+          </a>
+          <a href="/institute/approvals" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-user-check"></i></span> Approvals
+          </a>
+          <a href="/institute/trainers" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-chalkboard-teacher"></i></span> Trainers
+          </a>
+          <a href="/institute/courses" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-book"></i></span> Courses
+          </a>
+        </div>
+        <div class="nav-group">
+          <div class="nav-group-label">Account</div>
+          <a href="/profile" class="nav-item">
+            <span class="nav-icon"><i class="fa fa-user"></i></span> Profile
+          </a>
+        </div>
+        {% endif %}
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/logout" class="nav-item" style="color:var(--danger);">
+          <span class="nav-icon"><i class="fa fa-sign-out-alt"></i></span> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ─── -->
+    <div class="main-content">
+      <div class="top-bar">
+        <div style="display:flex; align-items:center; gap:16px;">
+          <button class="sidebar-toggle" id="sidebar-toggle-btn"
+            style="display:none; background:var(--bg-card); border:1px solid var(--border-color); border-radius:8px; width:40px; height:40px; font-size:18px; color:var(--text-primary);">☰</button>
+          <div class="page-title">
+            <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+            <p>{% block page_subtitle %}Welcome to EduVerse{% endblock %}</p>
+          </div>
+        </div>
+        <div class="top-bar-actions">
+          <div class="notif-btn" data-tooltip="Notifications">
+            <i class="fa fa-bell"></i>
+            <span class="notif-dot"></span>
+          </div>
+          <a href="/profile"
+            style="display:flex; align-items:center; gap:8px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:8px 14px; font-size:13px; font-weight:600;">
+            <div class="user-avatar" style="width:28px; height:28px; font-size:12px;">{{ session.user_name[0]|upper }}
+            </div>
+            {{ session.user_name.split()[0] }}
+          </a>
+        </div>
+      </div>
+
+      <div class="content-area">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block scripts %}{% endblock %}
+</body>
+
+</html>

@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register – EduVerse LMS</title>
+    <meta
+      name="description"
+      content="Create your free EduVerse LMS account as a Student, Trainer, or Institute."
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="flash-container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% for
+      category, message in messages %}
+      <div class="flash-msg {{ category }}">
+        <span
+          >{% if category == 'success' %}✅{% elif category == 'danger' %}❌{%
+          elif category == 'warning' %}⚠️{% else %}ℹ️{% endif %}</span
+        >
+        <span>{{ message }}</span>
+        <span class="flash-close">×</span>
+      </div>
+      {% endfor %} {% endwith %}
+    </div>
+
+    <div class="auth-page">
+      <!-- Visual Side -->
+      <div class="auth-visual">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="auth-visual-content">
+          <a
+            href="/"
+            class="navbar-brand"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              margin-bottom: 40px;
+              text-decoration: none;
+            "
+          >
+            <div class="logo-icon">E</div>
+            <span
+              style="
+                font-size: 22px;
+                font-weight: 800;
+                color: white;
+                font-family: &quot;Poppins&quot;, sans-serif;
+              "
+              >Edu<em style="color: var(--primary); font-style: normal"
+                >Verse</em
+              ></span
+            >
+          </a>
+          <h2>Join EduVerse Today! 🚀</h2>
+          <p>
+            Create a free account and unlock a world of knowledge. Connect with
+            top trainers, enroll in courses, and achieve your goals.
+          </p>
+          <div class="auth-features" style="margin-top: 40px">
+            <div class="auth-feature">
+              <div class="auth-feature-icon">✅</div>
+              <div>
+                <strong>Free Registration</strong>
+                <p>No credit card required – get started instantly</p>
+              </div>
+            </div>
+            <div class="auth-feature">
+              <div class="auth-feature-icon">🔒</div>
+              <div>
+                <strong>Secure & Private</strong>
+                <p>Your data is encrypted and never shared</p>
+              </div>
+            </div>
+            <div class="auth-feature">
+              <div class="auth-feature-icon">📊</div>
+              <div>
+                <strong>Track Progress</strong>
+                <p>Real-time dashboard for all your activities</p>
+              </div>
+            </div>
+            <div class="auth-feature">
+              <div class="auth-feature-icon">🎯</div>
+              <div>
+                <strong>Multiple Roles</strong>
+                <p>Student, Trainer, or Institute — choose your path</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Side -->
+      <div class="auth-form-side" style="overflow-y: auto">
+        <div class="auth-form-wrap" style="max-width: 500px">
+          <h2>Create Account</h2>
+          <p class="subtitle">
+            Already have an account?
+            <a
+              href="/login"
+              style="color: var(--primary-light); font-weight: 600"
+              >Sign in here</a
+            >
+          </p>
+
+          <form action="/register" method="POST" data-loading="true">
+            <!-- Step 1: Choose Role -->
+            <div class="form-group">
+              <label class="form-label">I am a...</label>
+              <div class="role-selector">
+                <div class="role-option">
+                  <input
+                    type="radio"
+                    name="role"
+                    id="role-student"
+                    value="student"
+                    checked
+                  />
+                  <label for="role-student">
+                    <span class="icon">🎓</span>
+                    Student
+                  </label>
+                </div>
+                <div class="role-option">
+                  <input
+                    type="radio"
+                    name="role"
+                    id="role-trainer"
+                    value="trainer"
+                  />
+                  <label for="role-trainer">
+                    <span class="icon">👨‍🏫</span>
+                    Trainer
+                  </label>
+                </div>
+                <div class="role-option">
+                  <input
+                    type="radio"
+                    name="role"
+                    id="role-institute"
+                    value="institute"
+                  />
+                  <label for="role-institute">
+                    <span class="icon">🏛️</span>
+                    Institute
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Common Fields -->
+            <div class="form-group">
+              <label class="form-label" for="full_name">Full Name</label>
+              <div class="input-icon-wrap">
+                <span class="input-icon"><i class="fa fa-user"></i></span>
+                <input
+                  type="text"
+                  id="full_name"
+                  name="full_name"
+                  class="form-control"
+                  placeholder="John Doe"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <div class="input-icon-wrap">
+                  <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    class="form-control"
+                    placeholder="you@example.com"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number</label>
+                <div class="input-icon-wrap">
+                  <span class="input-icon"><i class="fa fa-phone"></i></span>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    class="form-control"
+                    placeholder="+91 9876543210"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <div class="input-icon-wrap">
+                  <span class="input-icon"><i class="fa fa-lock"></i></span>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    class="form-control"
+                    placeholder="Min. 6 characters"
+                    required
+                  />
+                  <span
+                    class="input-icon-btn"
+                    style="
+                      cursor: pointer;
+                      position: absolute;
+                      right: 14px;
+                      top: 50%;
+                      transform: translateY(-50%);
+                      color: var(--primary);
+                      font-size: 18px;
+                      z-index: 10;
+                    "
+                    onclick="togglePassword('password')"
+                  >
+                    <i class="fa fa-eye" id="eye-icon-password"></i>
+                  </span>
+                </div>
+                <span
+                  id="pass-strength"
+                  style="
+                    font-size: 12px;
+                    font-weight: 600;
+                    margin-top: 4px;
+                    display: block;
+                  "
+                ></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="confirm_password"
+                  >Confirm Password</label
+                >
+                <div class="input-icon-wrap">
+                  <span class="input-icon"><i class="fa fa-lock"></i></span>
+                  <input
+                    type="password"
+                    id="confirm_password"
+                    name="confirm_password"
+                    class="form-control"
+                    placeholder="Repeat password"
+                    required
+                  />
+                  <span
+                    class="input-icon-btn"
+                    style="
+                      cursor: pointer;
+                      position: absolute;
+                      right: 14px;
+                      top: 50%;
+                      transform: translateY(-50%);
+                      color: var(--primary);
+                      font-size: 18px;
+                      z-index: 10;
+                    "
+                    onclick="togglePassword('confirm_password')"
+                  >
+                    <i class="fa fa-eye" id="eye-icon-confirm"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Student Extra Fields -->
+            <div id="student-fields" style="display: block">
+              <div class="form-group">
+                <label class="form-label" for="education_level"
+                  >Education Level</label
+                >
+                <select
+                  name="education_level"
+                  id="education_level"
+                  class="form-control form-select"
+                >
+                  <option value="">Select education level</option>
+                  <option>High School</option>
+                  <option>Undergraduate</option>
+                  <option>Graduate</option>
+                  <option>Post Graduate</option>
+                  <option>PhD</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Trainer Extra Fields -->
+            <div id="trainer-fields" style="display: none">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="specialization"
+                    >Specialization</label
+                  >
+                  <div class="input-icon-wrap">
+                    <span class="input-icon"><i class="fa fa-star"></i></span>
+                    <input
+                      type="text"
+                      id="specialization"
+                      name="specialization"
+                      class="form-control"
+                      placeholder="e.g. Python, Mathematics"
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="experience_years"
+                    >Years of Experience</label
+                  >
+                  <div class="input-icon-wrap">
+                    <span class="input-icon"><i class="fa fa-clock"></i></span>
+                    <input
+                      type="number"
+                      id="experience_years"
+                      name="experience_years"
+                      class="form-control"
+                      placeholder="e.g. 5"
+                      min="0"
+                      max="50"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="qualification"
+                  >Qualification</label
+                >
+                <input
+                  type="text"
+                  id="qualification"
+                  name="qualification"
+                  class="form-control"
+                  placeholder="e.g. B.Tech, MBA, M.Sc"
+                />
+              </div>
+            </div>
+
+            <!-- Institute Extra Fields -->
+            <div id="institute-fields" style="display: none">
+              <div class="form-group">
+                <label class="form-label" for="institute_name"
+                  >Institute Name</label
+                >
+                <div class="input-icon-wrap">
+                  <span class="input-icon"
+                    ><i class="fa fa-university"></i
+                  ></span>
+                  <input
+                    type="text"
+                    id="institute_name"
+                    name="institute_name"
+                    class="form-control"
+                    placeholder="e.g. Delhi Institute of Technology"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="address">Address</label>
+                <textarea
+                  name="address"
+                  id="address"
+                  class="form-control"
+                  rows="2"
+                  placeholder="Full institute address..."
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="website"
+                  >Website (Optional)</label
+                >
+                <input
+                  type="url"
+                  id="website"
+                  name="website"
+                  class="form-control"
+                  placeholder="https://yourinstitute.edu"
+                />
+              </div>
+            </div>
+
+            <!-- Institute select / request message for Student/Trainer -->
+            <div
+              id="institute-select-fields"
+              style="display: block; margin-top: 16px"
+            >
+              <div class="form-group">
+                <label class="form-label" for="register_institute_id"
+                  >Select Institute</label
+                >
+                <select
+                  name="institute_id"
+                  id="register_institute_id"
+                  class="form-control form-select"
+                  required
+                >
+                  <option value="">-- Choose an Institute --</option>
+                  {% for inst in institutes %}
+                  <option value="{{ inst.id }}">
+                    {{ inst.institute_name }}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="approval_message"
+                  >Message to Admin / Institute</label
+                >
+                <textarea
+                  name="approval_message"
+                  id="approval_message"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Tell the institute why you would like to join..."
+                  required
+                ></textarea>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary btn-full btn-lg"
+              style="margin-top: 8px"
+            >
+              <i class="fa fa-user-plus"></i> Create Account
+            </button>
+          </form>
+
+          <p
+            style="
+              text-align: center;
+              margin-top: 16px;
+              font-size: 12px;
+              color: var(--text-muted);
+            "
+          >
+            By registering, you agree to our
+            <a href="#" style="color: var(--primary-light)">Terms of Service</a>
+            and
+            <a href="#" style="color: var(--primary-light)">Privacy Policy</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+      function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const iconId = "eye-icon-" + fieldId;
+        const icon = document.getElementById(iconId);
+        if (field.type === "password") {
+          field.type = "text";
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
+        } else {
+          field.type = "password";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        }
+      }
+    </script>
+  </body>
+</html>

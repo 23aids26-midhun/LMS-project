@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EduVerse LMS – Learn. Grow. Succeed.</title>
+    <meta
+      name="description"
+      content="EduVerse is a powerful Learning Management System for Students, Trainers, and Institutes. Enroll, teach, and manage courses all in one place."
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <!-- Flash Messages -->
+    <div class="flash-container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% for
+      category, message in messages %}
+      <div class="flash-msg {{ category }}">
+        <span>
+          {% if category == 'success' %}✅{% elif category == 'danger' %}❌{%
+          elif category == 'warning' %}⚠️{% else %}ℹ️{% endif %}
+        </span>
+        <span>{{ message }}</span>
+        <span class="flash-close">×</span>
+      </div>
+      {% endfor %} {% endwith %}
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+      <a href="/" class="navbar-brand">
+        <div class="logo-icon">E</div>
+        <span>Edu<em>Verse</em></span>
+      </a>
+      <div class="navbar-links">
+        <a href="#features">Features</a>
+        <a href="#roles">For You</a>
+        <a href="#courses">Courses</a>
+        <a href="#stats">Stats</a>
+      </div>
+      <div class="navbar-cta">
+        <a href="/login" class="btn btn-outline">Login</a>
+        <a href="/register" class="btn btn-primary">Get Started Free</a>
+      </div>
+    </nav>
+
+    <!-- ══ HERO ══ -->
+    <section class="hero">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="hero-content animate-fade-up">
+        <div class="hero-badge">
+          <span></span> Now with AI-powered learning paths
+        </div>
+        <h1>Learn Without <span class="gradient-text">Limits</span></h1>
+        <p>
+          EduVerse connects students, trainers, and institutes on one powerful
+          platform. Discover courses, track progress, and achieve your goals
+          faster.
+        </p>
+        <div class="hero-buttons">
+          <a href="/register" class="btn btn-primary btn-lg">
+            <i class="fa fa-rocket"></i> Start Learning Free
+          </a>
+          <a href="#roles" class="btn btn-outline btn-lg">
+            <i class="fa fa-play-circle"></i> See How It Works
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num" data-count="{{ stats.courses }}" data-suffix="+">
+              0+
+            </div>
+            <div class="label">Courses</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num" data-count="{{ stats.students }}" data-suffix="+">
+              0+
+            </div>
+            <div class="label">Students</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num" data-count="{{ stats.trainers }}" data-suffix="+">
+              0+
+            </div>
+            <div class="label">Trainers</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual float-anim">
+        <div
+          style="
+            font-size: 180px;
+            filter: drop-shadow(0 0 60px rgba(108, 99, 255, 0.4));
+          "
+        >
+          🎓
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FEATURES ══ -->
+    <section class="section" id="features">
+      <div class="section-header animate-fade-up">
+        <div class="section-tag">Why EduVerse?</div>
+        <h2>
+          Everything You Need to <span class="gradient-text">Succeed</span>
+        </h2>
+        <p>
+          A complete ecosystem for modern education — designed for everyone.
+        </p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card animate-fade-up delay-100">
+          <div class="feature-icon icon-student">
+            <i class="fa fa-graduation-cap"></i>
+          </div>
+          <h3>Smart Learning</h3>
+          <p>
+            Students get access to curated courses, assignments, and real-time
+            progress tracking to stay on top of their studies.
+          </p>
+        </div>
+        <div class="feature-card animate-fade-up delay-200">
+          <div class="feature-icon icon-trainer">
+            <i class="fa fa-chalkboard-teacher"></i>
+          </div>
+          <h3>Trainer Tools</h3>
+          <p>
+            Trainers can create rich course content, add video lessons, set
+            assignments, and grade student submissions seamlessly.
+          </p>
+        </div>
+        <div class="feature-card animate-fade-up delay-300">
+          <div class="feature-icon icon-institute">
+            <i class="fa fa-university"></i>
+          </div>
+          <h3>Institute Management</h3>
+          <p>
+            Institutes can onboard trainers, oversee all courses, monitor
+            student engagement, and publish educational content at scale.
+          </p>
+        </div>
+        <div class="feature-card animate-fade-up delay-100">
+          <div
+            class="feature-icon"
+            style="background: rgba(59, 130, 246, 0.2); color: #3b82f6"
+          >
+            <i class="fa fa-chart-line"></i>
+          </div>
+          <h3>Progress Analytics</h3>
+          <p>
+            Real-time dashboards give you a clear picture of learning progress,
+            enrollment stats, and performance metrics.
+          </p>
+        </div>
+        <div class="feature-card animate-fade-up delay-200">
+          <div
+            class="feature-icon"
+            style="background: rgba(245, 158, 11, 0.2); color: #f59e0b"
+          >
+            <i class="fa fa-bell"></i>
+          </div>
+          <h3>Smart Notifications</h3>
+          <p>
+            Stay updated with instant notifications for enrollments, assignment
+            deadlines, grading, and announcements.
+          </p>
+        </div>
+        <div class="feature-card animate-fade-up delay-300">
+          <div
+            class="feature-icon"
+            style="background: rgba(239, 68, 68, 0.2); color: #ef4444"
+          >
+            <i class="fa fa-shield-alt"></i>
+          </div>
+          <h3>Secure & Reliable</h3>
+          <p>
+            Industry-standard security with hashed passwords, session
+            management, and role-based access control.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ ROLES ══ -->
+    <section
+      class="section"
+      id="roles"
+      style="background: rgba(255, 255, 255, 0.02)"
+    >
+      <div class="section-header">
+        <div class="section-tag">Choose Your Role</div>
+        <h2>Built for <span class="gradient-text">Everyone</span></h2>
+        <p>
+          Whether you're a learner, educator, or institution — EduVerse has the
+          tools you need.
+        </p>
+      </div>
+      <div
+        class="roles-grid"
+        style="display: grid; grid-template-columns: repeat({% if selected_role %}1{% else %}3{% endif %}, 1fr); max-width: {% if selected_role %}450px{% else %}1200px{% endif %}; margin: 0 auto; gap: 30px;"
+      >
+        {% if not selected_role or selected_role == 'student' %}
+        <div class="role-card student animate-fade-up delay-100">
+          <div class="role-icon">🎓</div>
+          <h3>Student</h3>
+          <p>
+            Discover and enroll in courses across dozens of categories. Learn at
+            your own pace.
+          </p>
+          <ul class="role-features">
+            <li>Browse & enroll in courses</li>
+            <li>Watch lessons & download material</li>
+            <li>Submit assignments online</li>
+            <li>Track your learning progress</li>
+            <li>View grades & feedback</li>
+          </ul>
+          {% if selected_role %}
+          <a href="/student/dashboard" class="btn btn-primary btn-full"
+            >Go to Dashboard</a
+          >
+          {% else %}
+          <a href="/login?role=student" class="btn btn-primary btn-full"
+            >Login as Student</a
+          >
+          {% endif %}
+        </div>
+        {% endif %} {% if not selected_role or selected_role == 'trainer' %}
+        <div class="role-card trainer animate-fade-up delay-200">
+          <div class="role-icon">👨‍🏫</div>
+          <h3>Trainer</h3>
+          <p>
+            Share your knowledge by creating powerful courses and engaging with
+            your students.
+          </p>
+          <ul class="role-features">
+            <li>Create & publish courses</li>
+            <li>Add lessons with video & text</li>
+            <li>Create assignments & grade them</li>
+            <li>Monitor enrolled students</li>
+            <li>Collaborate with institutes</li>
+          </ul>
+          {% if selected_role %}
+          <a
+            href="/trainer/dashboard"
+            class="btn btn-primary btn-full"
+            style="
+              background: linear-gradient(135deg, var(--secondary), #ff8fa3);
+              box-shadow: 0 4px 15px rgba(255, 101, 132, 0.4);
+            "
+            >Go to Dashboard</a
+          >
+          {% else %}
+          <a
+            href="/login?role=trainer"
+            class="btn btn-primary btn-full"
+            style="
+              background: linear-gradient(135deg, var(--secondary), #ff8fa3);
+              box-shadow: 0 4px 15px rgba(255, 101, 132, 0.4);
+            "
+            >Login as Trainer</a
+          >
+          {% endif %}
+        </div>
+        {% endif %} {% if not selected_role or selected_role == 'institute' %}
+        <div class="role-card institute animate-fade-up delay-300">
+          <div class="role-icon">🏛️</div>
+          <h3>Institute</h3>
+          <p>
+            Manage your educational programs, trainers, and students all from
+            one dashboard.
+          </p>
+          <ul class="role-features">
+            <li>Onboard & manage trainers</li>
+            <li>Oversee all courses</li>
+            <li>View student performance</li>
+            <li>Publish institutional courses</li>
+            <li>Analytics & reporting</li>
+          </ul>
+          {% if selected_role %}
+          <a
+            href="/institute/dashboard"
+            class="btn btn-primary btn-full"
+            style="
+              background: linear-gradient(135deg, var(--accent), #34d399);
+              box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);
+              color: #0f0e17;
+            "
+            >Go to Dashboard</a
+          >
+          {% else %}
+          <a
+            href="/login?role=institute"
+            class="btn btn-primary btn-full"
+            style="
+              background: linear-gradient(135deg, var(--accent), #34d399);
+              box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);
+              color: #0f0e17;
+            "
+            >Login as Institute</a
+          >
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- ══ STATS ══ -->
+    <section class="section stats-section" id="stats">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div
+            class="stat-num"
+            style="
+              background: linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-light)
+              );
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+            data-count="{{ stats.courses }}"
+          >
+            {{ stats.courses }}
+          </div>
+          <div class="stat-label">Published Courses</div>
+        </div>
+        <div class="stat-item">
+          <div
+            class="stat-num"
+            style="
+              background: linear-gradient(135deg, var(--secondary), #ff8fa3);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+            data-count="{{ stats.students }}"
+          >
+            {{ stats.students }}
+          </div>
+          <div class="stat-label">Enrolled Students</div>
+        </div>
+        <div class="stat-item">
+          <div
+            class="stat-num"
+            style="
+              background: linear-gradient(135deg, var(--accent), #34d399);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+            data-count="{{ stats.trainers }}"
+          >
+            {{ stats.trainers }}
+          </div>
+          <div class="stat-label">Expert Trainers</div>
+        </div>
+        <div class="stat-item">
+          <div
+            class="stat-num"
+            style="
+              background: linear-gradient(135deg, #f59e0b, #fcd34d);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+            data-count="{{ stats.institutes }}"
+          >
+            {{ stats.institutes }}
+          </div>
+          <div class="stat-label">Partner Institutes</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ CATEGORIES ══ -->
+    {% if categories %}
+    <section class="section" id="courses">
+      <div class="section-header">
+        <div class="section-tag">Explore</div>
+        <h2>Course <span class="gradient-text">Categories</span></h2>
+        <p>From programming to arts — find the subject that excites you.</p>
+      </div>
+      <div
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+          gap: 16px;
+        "
+      >
+        {% for cat in categories %}
+        <a
+          href="/student/courses?category={{ cat.name }}"
+          style="
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px 16px;
+            text-align: center;
+            transition: var(--transition);
+            display: block;
+          "
+          onmouseover="
+            this.style.borderColor = 'rgba(108,99,255,0.4)';
+            this.style.transform = 'translateY(-4px)';
+          "
+          onmouseout="
+            this.style.borderColor = '';
+            this.style.transform = '';
+          "
+        >
+          <div style="font-size: 32px; margin-bottom: 10px">
+            <i class="fa {{ cat.icon }}"></i>
+          </div>
+          <div style="font-size: 14px; font-weight: 600">{{ cat.name }}</div>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    <!-- ══ CTA ══ -->
+    <section class="section" style="text-align: center">
+      <div
+        style="
+          background: linear-gradient(
+            135deg,
+            rgba(108, 99, 255, 0.15),
+            rgba(255, 101, 132, 0.1)
+          );
+          border: 1px solid rgba(108, 99, 255, 0.2);
+          border-radius: var(--radius-xl);
+          padding: 80px 40px;
+          max-width: 700px;
+          margin: 0 auto;
+        "
+      >
+        <div style="font-size: 48px; margin-bottom: 16px">🚀</div>
+        <h2 style="font-size: 42px; margin-bottom: 16px">
+          Ready to Start Your Journey?
+        </h2>
+        <p
+          style="
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 36px;
+            line-height: 1.7;
+          "
+        >
+          Join thousands of students, trainers, and institutes already using
+          EduVerse to transform education.
+        </p>
+        <div
+          style="
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+          "
+        >
+          <a href="/register" class="btn btn-primary btn-lg"
+            ><i class="fa fa-user-plus"></i> Create Account</a
+          >
+          <a href="/login" class="btn btn-outline btn-lg"
+            ><i class="fa fa-sign-in-alt"></i> Sign In</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ FOOTER ══ -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="navbar-brand" style="margin-bottom: 12px">
+            <div class="logo-icon">E</div>
+            <span style="font-size: 20px; font-weight: 800"
+              >Edu<em style="color: var(--primary); font-style: normal"
+                >Verse</em
+              ></span
+            >
+          </div>
+          <p>
+            A modern Learning Management System built for students, trainers,
+            and institutes to connect, learn, and grow together.
+          </p>
+        </div>
+        <div>
+          <h4>Platform</h4>
+          <ul>
+            <li><a href="/register?role=student">For Students</a></li>
+            <li><a href="/register?role=trainer">For Trainers</a></li>
+            <li><a href="/register?role=institute">For Institutes</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+            <li><a href="#features">Features</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Contact Us</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 EduVerse LMS. All rights reserved.</p>
+        <p style="color: var(--text-muted)">
+          Built with ❤️ using Flask & MySQL
+        </p>
+      </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  </body>
+</html>

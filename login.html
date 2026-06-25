@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login – EduVerse LMS</title>
+    <meta name="description" content="Login to your EduVerse LMS account." />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="flash-container">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% for
+      category, message in messages %}
+      <div class="flash-msg {{ category }}">
+        <span
+          >{% if category == 'success' %}✅{% elif category == 'danger' %}❌{%
+          elif category == 'warning' %}⚠️{% else %}ℹ️{% endif %}</span
+        >
+        <span>{{ message }}</span>
+        <span class="flash-close">×</span>
+      </div>
+      {% endfor %} {% endwith %}
+    </div>
+
+    <div class="auth-page">
+      <!-- Visual Side -->
+      <div class="auth-visual">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="auth-visual-content">
+          <a
+            href="/"
+            class="navbar-brand"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              margin-bottom: 40px;
+              text-decoration: none;
+            "
+          >
+            <div class="logo-icon">E</div>
+            <span
+              style="
+                font-size: 22px;
+                font-weight: 800;
+                color: white;
+                font-family: &quot;Poppins&quot;, sans-serif;
+              "
+              >Edu<em style="color: var(--primary); font-style: normal"
+                >Verse</em
+              ></span
+            >
+          </a>
+          <h2>Welcome Back! 👋</h2>
+          <p>
+            Sign in to continue your learning journey. Access your courses,
+            track progress, and connect with your community.
+          </p>
+          <div class="auth-features">
+            <div class="auth-feature">
+              <div class="auth-feature-icon">🎓</div>
+              <div>
+                <strong>Students</strong>
+                <p>Browse courses and track your learning progress</p>
+              </div>
+            </div>
+            <div class="auth-feature">
+              <div class="auth-feature-icon">👨‍🏫</div>
+              <div>
+                <strong>Trainers</strong>
+                <p>Manage courses and engage with your students</p>
+              </div>
+            </div>
+            <div class="auth-feature">
+              <div class="auth-feature-icon">🏛️</div>
+              <div>
+                <strong>Institutes</strong>
+                <p>Oversee your entire educational ecosystem</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Side -->
+      <div class="auth-form-side">
+        <div class="auth-form-wrap">
+          <div class="logo" style="margin-bottom: 8px">
+            <div class="logo-icon">E</div>
+            <span
+              style="
+                font-size: 18px;
+                font-weight: 800;
+                font-family: &quot;Poppins&quot;, sans-serif;
+              "
+              >Edu<em style="color: var(--primary); font-style: normal"
+                >Verse</em
+              ></span
+            >
+          </div>
+          <h2>Sign In</h2>
+          <p class="subtitle">
+            Don't have an account?
+            <a
+              href="/register"
+              style="color: var(--primary-light); font-weight: 600"
+              >Create one free</a
+            >
+          </p>
+
+          <form action="/login" method="POST" data-loading="true">
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address</label>
+              <div class="input-icon-wrap">
+                <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  placeholder="you@example.com"
+                  required
+                  autocomplete="email"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="password-login">Password</label>
+              <div class="input-icon-wrap">
+                <span class="input-icon"><i class="fa fa-lock"></i></span>
+                <input
+                  type="password"
+                  id="password-login"
+                  name="password"
+                  class="form-control"
+                  placeholder="Enter your password"
+                  required
+                  autocomplete="current-password"
+                />
+                <span
+                  class="input-icon-btn"
+                  style="
+                    cursor: pointer;
+                    position: absolute;
+                    right: 14px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: var(--primary);
+                    font-size: 18px;
+                    z-index: 10;
+                  "
+                  onclick="togglePassword('password-login')"
+                >
+                  <i class="fa fa-eye" id="eye-icon-login"></i>
+                </span>
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 20px;
+              "
+            >
+              <a href="#" style="font-size: 13px; color: var(--primary-light)"
+                >Forgot password?</a
+              >
+            </div>
+            <button
+              type="submit"
+              class="btn btn-primary btn-full btn-lg"
+              id="login-btn"
+            >
+              <i class="fa fa-sign-in-alt"></i> Sign In
+            </button>
+          </form>
+
+          <div class="form-divider"><span>or choose a role</span></div>
+          {% if not selected_role %}
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              gap: 10px;
+            "
+          >
+            <a
+              href="/login?role=student"
+              class="btn btn-outline btn-sm"
+              style="flex-direction: column; gap: 4px; height: 60px"
+            >
+              <span style="font-size: 18px">🎓</span
+              ><span style="font-size: 11px">Student</span>
+            </a>
+            <a
+              href="/login?role=trainer"
+              class="btn btn-outline btn-sm"
+              style="flex-direction: column; gap: 4px; height: 60px"
+            >
+              <span style="font-size: 18px">👨‍🏫</span
+              ><span style="font-size: 11px">Trainer</span>
+            </a>
+            <a
+              href="/login?role=institute"
+              class="btn btn-outline btn-sm"
+              style="flex-direction: column; gap: 4px; height: 60px"
+            >
+              <span style="font-size: 18px">🏛️</span
+              ><span style="font-size: 11px">Institute</span>
+            </a>
+          </div>
+          {% else %}
+          <div style="display: flex; gap: 10px; align-items: center">
+            <div
+              class="btn btn-outline btn-sm"
+              style="
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                height: 60px;
+                padding: 10px 16px;
+              "
+            >
+              {% if selected_role == 'student' %}🎓{% elif selected_role ==
+              'trainer' %}👨‍🏫{% else %}🏛️{% endif %}
+              <strong
+                style="
+                  font-size: 13px;
+                  margin-left: 6px;
+                  text-transform: capitalize;
+                "
+                >{{ selected_role }}</strong
+              >
+            </div>
+            <a href="/login" class="btn btn-link">Show all roles</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+      function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const icon = document.getElementById(
+          "eye-icon-" + (fieldId === "password-login" ? "login" : fieldId),
+        );
+        if (field.type === "password") {
+          field.type = "text";
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
+        } else {
+          field.type = "password";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        }
+      }
+    </script>
+  </body>
+</html>

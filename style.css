@@ -1,0 +1,17 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+}
+nav a {
+  margin: 10px;
+  text-decoration: none;
+  color: blue;
+}
+h1,
+h2 {
+  color: darkgreen;
+}
+nav a.active {
+  font-weight: bold;
+  color: darkred;
+}

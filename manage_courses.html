@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Courses{% endblock %}
+{% block page_title %}Manage Courses{% endblock %}
+{% block page_subtitle %}All your created courses. Add lessons and track enrollments.{% endblock %}
+
+{% block content %}
+
+<div style="display:flex;justify-content:flex-end;margin-bottom:20px;">
+  <a href="/trainer/create-course" class="btn btn-primary">
+    <i class="fa fa-plus"></i> Create New Course
+  </a>
+</div>
+
+{% if courses %}
+<div class="card">
+  <div class="card-body" style="padding:0;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Course Title</th>
+            <th>Category</th>
+            <th>Level</th>
+            <th>Duration</th>
+            <th>Students</th>
+            <th>Lessons</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for course in courses %}
+          <tr>
+            <td class="td-name">{{ course.title }}</td>
+            <td><span class="badge badge-primary">{{ course.category_name or 'N/A' }}</span></td>
+            <td>
+              {% if course.level == 'beginner' %}🟢
+              {% elif course.level == 'intermediate' %}🟡
+              {% else %}🔴{% endif %}
+              {{ course.level|capitalize }}
+            </td>
+            <td>{{ course.duration_weeks }}w</td>
+            <td><strong>{{ course.enrolled_count }}</strong></td>
+            <td>{{ course.lesson_count }}</td>
+            <td>
+              {% if course.status == 'published' %}
+                <span class="badge badge-success">Published</span>
+              {% elif course.status == 'draft' %}
+                <span class="badge badge-warning">Draft</span>
+              {% else %}
+                <span class="badge badge-danger">Archived</span>
+              {% endif %}
+            </td>
+            <td>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                <a href="/trainer/course/{{ course.id }}/add-lesson" class="btn btn-outline btn-sm" data-tooltip="Add Lesson">
+                  <i class="fa fa-plus"></i>
+                </a>
+                <form action="/trainer/delete-course/{{ course.id }}" method="POST" onsubmit="return confirm('Delete this course?');">
+                  <button type="submit" class="btn btn-danger btn-sm" data-tooltip="Delete">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<div class="empty-state" style="margin-top:80px;">
+  <div class="empty-icon">📚</div>
+  <h3>No courses yet</h3>
+  <p>Create your first course and start teaching students today!</p>
+  <a href="/trainer/create-course" class="btn btn-primary btn-lg">
+    <i class="fa fa-plus-circle"></i> Create Your First Course
+  </a>
+</div>
+{% endif %}
+
+{% endblock %}

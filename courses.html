@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Courses{% endblock %}
+{% block page_title %}Browse Courses{% endblock %}
+{% block page_subtitle %}Discover and enroll in courses across all categories.{% endblock %}
+
+{% block content %}
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+  <div class="search-input-wrap">
+    <span class="search-icon"><i class="fa fa-search"></i></span>
+    <input type="text" id="course-search" class="form-control" placeholder="Search courses by title..." />
+  </div>
+  <select id="category-filter" class="form-control form-select filter-select">
+    <option value="">All Categories</option>
+    {% for cat in categories %}
+    <option value="{{ cat.name }}" {% if category_filter == cat.name %}selected{% endif %}>{{ cat.name }}</option>
+    {% endfor %}
+  </select>
+</div>
+
+{% if courses %}
+<div class="courses-grid">
+  {% for course in courses %}
+  <div class="course-card" data-title="{{ course.title|lower }}" data-category="{{ course.category_name|lower if course.category_name else '' }}">
+    <div class="course-thumb">
+      <span style="font-size:52px;">
+        {% if course.category_name == 'Programming' %}💻
+        {% elif course.category_name == 'Mathematics' %}📐
+        {% elif course.category_name == 'Science' %}🔬
+        {% elif course.category_name == 'Language' %}📖
+        {% elif course.category_name == 'Business' %}💼
+        {% elif course.category_name == 'Design' %}🎨
+        {% elif course.category_name == 'Data Science' %}📊
+        {% else %}📚{% endif %}
+      </span>
+      <span class="course-badge">{{ course.level|capitalize }}</span>
+      {% if course.is_enrolled %}
+      <span class="enrolled-badge" style="position:absolute;bottom:10px;right:10px;">✓ Enrolled</span>
+      {% endif %}
+    </div>
+    <div class="course-body">
+      <div class="course-meta">
+        <span class="course-category">{{ course.category_name or 'General' }}</span>
+        <span class="course-level">• {{ course.duration_weeks }} weeks</span>
+      </div>
+      <div class="course-title">{{ course.title }}</div>
+      <div class="course-desc">{{ course.description or 'No description provided.' }}</div>
+      <div class="course-footer">
+        <div class="course-trainer">
+          <div class="trainer-avatar">{{ (course.trainer_name or 'T')[0]|upper }}</div>
+          <span>{{ course.trainer_name or 'Unknown' }}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:11px;color:var(--text-muted);">{{ course.enrolled_count }} enrolled</span>
+          {% if course.price and course.price > 0 %}
+          <span class="course-price">₹{{ "%.0f"|format(course.price) }}</span>
+          {% else %}
+          <span class="course-price" style="color:var(--success);">Free</span>
+          {% endif %}
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        {% if course.is_enrolled %}
+          <a href="/student/course/{{ course.id }}" class="btn btn-success btn-full btn-sm">
+            <i class="fa fa-play"></i> Continue Learning
+          </a>
+        {% else %}
+          <form action="/student/enroll/{{ course.id }}" method="POST" class="enroll-form">
+            <button type="submit" class="btn btn-primary btn-full btn-sm">
+              <i class="fa fa-plus-circle"></i> Enroll Now
+            </button>
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% else %}
+<div class="empty-state" style="margin-top:60px;">
+  <div class="empty-icon">🔍</div>
+  <h3>No courses found</h3>
+  <p>No courses match your search. Try a different keyword or category.</p>
+</div>
+{% endif %}
+
+{% endblock %}

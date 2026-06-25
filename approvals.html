@@ -1,0 +1,367 @@
+{% extends "base.html" %} {% block title %}Registration Approvals{% endblock %}
+{% block page_title %}Registration Approvals{% endblock %} {% block
+page_subtitle %}Review registration requests from trainers and students seeking
+access to your institute.{% endblock %} {% block content %}
+<div class="card">
+  <div class="card-header">
+    <div style="display: flex; gap: 12px">
+      <button
+        class="btn btn-outline active-tab"
+        id="btn-students"
+        onclick="switchTab('students')"
+      >
+        🎓 Students ({{ pending_students|length }})
+      </button>
+      <button
+        class="btn btn-outline"
+        id="btn-trainers"
+        onclick="switchTab('trainers')"
+      >
+        👨‍🏫 Trainers ({{ pending_trainers|length }})
+      </button>
+    </div>
+  </div>
+
+  <div class="card-body">
+    <!-- Students Tab -->
+    <div id="tab-students" style="display: block">
+      {% if pending_students %}
+      <div style="display: grid; grid-template-columns: 1fr; gap: 20px">
+        {% for student in pending_students %}
+        <div
+          class="card"
+          style="
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-card2);
+            padding: 24px;
+            border-radius: var(--radius-md);
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              flex-wrap: wrap;
+              gap: 16px;
+            "
+          >
+            <div style="display: flex; gap: 16px; align-items: center">
+              <div
+                class="user-avatar"
+                style="width: 56px; height: 56px; font-size: 20px"
+              >
+                {{ student.full_name[0]|upper }}
+              </div>
+              <div>
+                <h3 style="font-size: 18px; margin-bottom: 4px">
+                  {{ student.full_name }}
+                </h3>
+                <p
+                  style="
+                    font-size: 13px;
+                    color: var(--text-muted);
+                    display: flex;
+                    gap: 12px;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <span
+                    ><i class="fa fa-envelope" style="margin-right: 4px"></i>{{
+                    student.email }}</span
+                  >
+                  {% if student.phone %}
+                  <span
+                    ><i class="fa fa-phone" style="margin-right: 4px"></i>{{
+                    student.phone }}</span
+                  >
+                  {% endif %}
+                  <span
+                    ><i
+                      class="fa fa-graduation-cap"
+                      style="margin-right: 4px"
+                    ></i
+                    >{{ student.education_level or 'Not Specified' }}</span
+                  >
+                </p>
+              </div>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted)">
+              Registered: {{ student.created_at.strftime('%Y-%m-%d %H:%M') if
+              student.created_at else 'N/A' }}
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 16px;
+              background: rgba(255, 255, 255, 0.03);
+              padding: 14px;
+              border-radius: var(--radius-sm);
+              border-left: 3px solid var(--primary);
+              font-size: 14px;
+              line-height: 1.6;
+              color: var(--text-secondary);
+            "
+          >
+            <strong>Message to Admin:</strong>
+            <p style="margin-top: 6px; font-style: italic">
+              "{{ student.approval_message }}"
+            </p>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              justify-content: flex-end;
+              gap: 12px;
+              margin-top: 16px;
+            "
+          >
+            <form
+              action="/institute/reject/{{ student.user_id }}"
+              method="POST"
+              style="display: inline"
+            >
+              <div style="display: flex; gap: 8px">
+                <input
+                  type="text"
+                  name="rejection_reason"
+                  class="form-control"
+                  placeholder="Reason for rejection (optional)"
+                  style="max-width: 250px"
+                />
+                <button
+                  type="submit"
+                  class="btn btn-outline"
+                  style="border-color: var(--danger); color: var(--danger)"
+                  onclick="
+                    return confirm(
+                      'Are you sure you want to reject this request?',
+                    );
+                  "
+                >
+                  <i class="fa fa-times"></i> Reject
+                </button>
+              </div>
+            </form>
+            <form
+              action="/institute/approve/{{ student.user_id }}"
+              method="POST"
+              style="display: inline"
+            >
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-check"></i> Approve & Activate
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state" style="padding: 40px 0">
+        <div class="empty-icon">🎓</div>
+        <h3>No Pending Students</h3>
+        <p>
+          There are no students currently awaiting approval for access to your
+          institute.
+        </p>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Trainers Tab -->
+    <div id="tab-trainers" style="display: none">
+      {% if pending_trainers %}
+      <div style="display: grid; grid-template-columns: 1fr; gap: 20px">
+        {% for trainer in pending_trainers %}
+        <div
+          class="card"
+          style="
+            border: 1.5px solid var(--border-color);
+            background: var(--bg-card2);
+            padding: 24px;
+            border-radius: var(--radius-md);
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: flex-start;
+              flex-wrap: wrap;
+              gap: 16px;
+            "
+          >
+            <div style="display: flex; gap: 16px; align-items: center">
+              <div
+                class="user-avatar"
+                style="width: 56px; height: 56px; font-size: 20px"
+              >
+                {{ trainer.full_name[0]|upper }}
+              </div>
+              <div>
+                <h3 style="font-size: 18px; margin-bottom: 4px">
+                  {{ trainer.full_name }}
+                </h3>
+                <p
+                  style="
+                    font-size: 13px;
+                    color: var(--text-muted);
+                    display: flex;
+                    gap: 12px;
+                    flex-wrap: wrap;
+                  "
+                >
+                  <span
+                    ><i class="fa fa-envelope" style="margin-right: 4px"></i>{{
+                    trainer.email }}</span
+                  >
+                  {% if trainer.phone %}
+                  <span
+                    ><i class="fa fa-phone" style="margin-right: 4px"></i>{{
+                    trainer.phone }}</span
+                  >
+                  {% endif %}
+                  <span
+                    ><i class="fa fa-star" style="margin-right: 4px"></i>{{
+                    trainer.specialization or 'Not Specified' }}</span
+                  >
+                  <span
+                    ><i class="fa fa-clock" style="margin-right: 4px"></i>{{
+                    trainer.experience_years or 0 }} yrs exp</span
+                  >
+                </p>
+              </div>
+            </div>
+            <div style="font-size: 12px; color: var(--text-muted)">
+              Registered: {{ trainer.created_at.strftime('%Y-%m-%d %H:%M') if
+              trainer.created_at else 'N/A' }}
+            </div>
+          </div>
+
+          <div
+            style="
+              margin-top: 16px;
+              background: rgba(255, 255, 255, 0.03);
+              padding: 14px;
+              border-radius: var(--radius-sm);
+              border-left: 3px solid var(--primary);
+              font-size: 14px;
+              line-height: 1.6;
+              color: var(--text-secondary);
+            "
+          >
+            <strong>Message to Admin:</strong>
+            <p style="margin-top: 6px; font-style: italic">
+              "{{ trainer.approval_message }}"
+            </p>
+          </div>
+
+          <div
+            style="
+              display: flex;
+              justify-content: flex-end;
+              gap: 12px;
+              margin-top: 16px;
+            "
+          >
+            <form
+              action="/institute/reject/{{ trainer.user_id }}"
+              method="POST"
+              style="display: inline"
+            >
+              <div style="display: flex; gap: 8px">
+                <input
+                  type="text"
+                  name="rejection_reason"
+                  class="form-control"
+                  placeholder="Reason for rejection (optional)"
+                  style="max-width: 250px"
+                />
+                <button
+                  type="submit"
+                  class="btn btn-outline"
+                  style="border-color: var(--danger); color: var(--danger)"
+                  onclick="
+                    return confirm(
+                      'Are you sure you want to reject this request?',
+                    );
+                  "
+                >
+                  <i class="fa fa-times"></i> Reject
+                </button>
+              </div>
+            </form>
+            <form
+              action="/institute/approve/{{ trainer.user_id }}"
+              method="POST"
+              style="display: inline"
+            >
+              <button type="submit" class="btn btn-success">
+                <i class="fa fa-check"></i> Approve & Activate
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-state" style="padding: 40px 0">
+        <div class="empty-icon">👨‍🏫</div>
+        <h3>No Pending Trainers</h3>
+        <p>
+          There are no trainers currently awaiting approval for access to your
+          institute.
+        </p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  function switchTab(tabName) {
+    const tabStudents = document.getElementById("tab-students");
+    const tabTrainers = document.getElementById("tab-trainers");
+    const btnStudents = document.getElementById("btn-students");
+    const btnTrainers = document.getElementById("btn-trainers");
+
+    if (tabName === "students") {
+      tabStudents.style.display = "block";
+      tabTrainers.style.display = "none";
+      btnStudents.classList.add("active-tab");
+      btnStudents.style.background = "rgba(108, 99, 255, 0.15)";
+      btnStudents.style.color = "var(--primary-light)";
+      btnStudents.style.borderColor = "var(--primary)";
+
+      btnTrainers.classList.remove("active-tab");
+      btnTrainers.style.background = "transparent";
+      btnTrainers.style.color = "var(--text-primary)";
+      btnTrainers.style.borderColor = "var(--border-color)";
+    } else {
+      tabStudents.style.display = "none";
+      tabTrainers.style.display = "block";
+      btnTrainers.classList.add("active-tab");
+      btnTrainers.style.background = "rgba(108, 99, 255, 0.15)";
+      btnTrainers.style.color = "var(--primary-light)";
+      btnTrainers.style.borderColor = "var(--primary)";
+
+      btnStudents.classList.remove("active-tab");
+      btnStudents.style.background = "transparent";
+      btnStudents.style.color = "var(--text-primary)";
+      btnStudents.style.borderColor = "var(--border-color)";
+    }
+  }
+
+  // Set initial styling for students tab button
+  document.addEventListener("DOMContentLoaded", () => {
+    const btnStudents = document.getElementById("btn-students");
+    if (btnStudents) {
+      btnStudents.style.background = "rgba(108, 99, 255, 0.15)";
+      btnStudents.style.color = "var(--primary-light)";
+      btnStudents.style.borderColor = "var(--primary)";
+    }
+  });
+</script>
+{% endblock %}

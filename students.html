@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}My Students{% endblock %}
+{% block page_title %}My Students{% endblock %}
+{% block page_subtitle %}All students enrolled in your courses.{% endblock %}
+
+{% block content %}
+
+{% if students %}
+<div class="card">
+  <div class="card-body" style="padding:0;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Course</th>
+            <th>Enrolled On</th>
+            <th>Progress</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in students %}
+          <tr>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div class="user-avatar" style="width:32px;height:32px;font-size:12px;">{{ s.full_name[0]|upper }}</div>
+                <span class="td-name">{{ s.full_name }}</span>
+              </div>
+            </td>
+            <td>{{ s.email }}</td>
+            <td>{{ s.phone or '—' }}</td>
+            <td><span class="badge badge-primary">{{ s.course_title }}</span></td>
+            <td style="font-size:12px;">{{ s.enrolled_at.strftime('%b %d, %Y') if s.enrolled_at else 'N/A' }}</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px;min-width:100px;">
+                <div class="progress" style="flex:1;"><div class="progress-bar" style="width:{{ s.progress_percent }}%;"></div></div>
+                <span style="font-size:12px;font-weight:600;color:var(--primary-light);">{{ s.progress_percent }}%</span>
+              </div>
+            </td>
+            <td>
+              {% if s.enroll_status == 'completed' %}
+                <span class="badge badge-success">Completed</span>
+              {% elif s.enroll_status == 'active' %}
+                <span class="badge badge-info">Active</span>
+              {% else %}
+                <span class="badge badge-danger">Dropped</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% else %}
+<div class="empty-state" style="margin-top:80px;">
+  <div class="empty-icon">👥</div>
+  <h3>No students yet</h3>
+  <p>Once students enroll in your courses, they'll appear here.</p>
+  <a href="/trainer/create-course" class="btn btn-primary">Create a Course</a>
+</div>
+{% endif %}
+
+{% endblock %}

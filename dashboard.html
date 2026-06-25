@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Trainer Dashboard{% endblock %}
+{% block page_title %}Trainer Dashboard{% endblock %}
+{% block page_subtitle %}Welcome, {{ session.user_name }}! Manage your courses and students.{% endblock %}
+
+{% block content %}
+
+<!-- Stats Row -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-card-bg">📚</div>
+    <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">Total Courses</p>
+    <h3 style="color:var(--primary-light);">{{ total_courses }}</h3>
+    <p style="font-size:13px;color:var(--text-secondary);">Created courses</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-bg">👥</div>
+    <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">Total Students</p>
+    <h3 style="color:var(--success);">{{ total_students }}</h3>
+    <p style="font-size:13px;color:var(--text-secondary);">Across all courses</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-bg">📝</div>
+    <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">Pending Grading</p>
+    <h3 style="color:var(--warning);">{{ pending_grading }}</h3>
+    <p style="font-size:13px;color:var(--text-secondary);">Submissions to grade</p>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card-bg">⭐</div>
+    <p style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">Quick Create</p>
+    <a href="/trainer/create-course" class="btn btn-primary btn-sm" style="margin-top:8px;">+ New Course</a>
+  </div>
+</div>
+
+<div class="dashboard-grid">
+  <!-- Left -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa fa-book" style="color:var(--primary);margin-right:8px;"></i> My Courses</h3>
+        <a href="/trainer/courses" class="btn btn-outline btn-sm">Manage All</a>
+      </div>
+      <div class="card-body">
+        {% if courses %}
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Course</th>
+                <th>Category</th>
+                <th>Students</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for course in courses %}
+              <tr>
+                <td class="td-name">{{ course.title }}</td>
+                <td><span class="badge badge-primary">{{ course.category_name or 'N/A' }}</span></td>
+                <td>{{ course.enrolled_count }}</td>
+                <td>
+                  {% if course.status == 'published' %}
+                    <span class="badge badge-success">Published</span>
+                  {% elif course.status == 'draft' %}
+                    <span class="badge badge-warning">Draft</span>
+                  {% else %}
+                    <span class="badge badge-danger">Archived</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="/trainer/course/{{ course.id }}/add-lesson" class="btn btn-outline btn-sm">+ Lesson</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+          <div class="empty-icon">📚</div>
+          <h3>No courses yet</h3>
+          <p>Create your first course and start teaching!</p>
+          <a href="/trainer/create-course" class="btn btn-primary">Create Course</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header">
+        <h3><i class="fa fa-bolt" style="color:var(--warning);margin-right:8px;"></i> Quick Actions</h3>
+      </div>
+      <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <a href="/trainer/create-course" class="btn btn-outline" style="flex-direction:column;gap:6px;height:70px;">
+          <i class="fa fa-plus-circle" style="font-size:20px;color:var(--primary);"></i>
+          <span style="font-size:12px;">New Course</span>
+        </a>
+        <a href="/trainer/students" class="btn btn-outline" style="flex-direction:column;gap:6px;height:70px;">
+          <i class="fa fa-users" style="font-size:20px;color:var(--success);"></i>
+          <span style="font-size:12px;">View Students</span>
+        </a>
+        <a href="/trainer/courses" class="btn btn-outline" style="flex-direction:column;gap:6px;height:70px;">
+          <i class="fa fa-book" style="font-size:20px;color:var(--warning);"></i>
+          <span style="font-size:12px;">My Courses</span>
+        </a>
+        <a href="/profile" class="btn btn-outline" style="flex-direction:column;gap:6px;height:70px;">
+          <i class="fa fa-user" style="font-size:20px;color:var(--secondary);"></i>
+          <span style="font-size:12px;">Profile</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa fa-bell" style="color:var(--warning);margin-right:8px;"></i> Notifications</h3>
+      </div>
+      <div class="card-body">
+        {% if notifications %}
+        <div class="notif-list">
+          {% for notif in notifications %}
+          <div class="notif-item {% if not notif.is_read %}unread{% endif %}">
+            <span class="notif-icon">🔔</span>
+            <div>
+              <div class="notif-text">{{ notif.message }}</div>
+              <div class="notif-time">{{ notif.created_at|timeago }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state" style="padding:30px 0;">
+          <p>No notifications yet.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="card" style="margin-top:20px;background:linear-gradient(135deg,rgba(108,99,255,0.1),rgba(255,101,132,0.05));">
+      <div class="card-body">
+        <h3 style="margin-bottom:12px;font-size:16px;">💡 Trainer Tips</h3>
+        <ul style="display:flex;flex-direction:column;gap:10px;">
+          <li style="font-size:13px;color:var(--text-secondary);display:flex;gap:8px;align-items:flex-start;"><span>✅</span> Break courses into small lessons for better engagement</li>
+          <li style="font-size:13px;color:var(--text-secondary);display:flex;gap:8px;align-items:flex-start;"><span>✅</span> Add video links to improve completion rates</li>
+          <li style="font-size:13px;color:var(--text-secondary);display:flex;gap:8px;align-items:flex-start;"><span>✅</span> Grade assignments promptly to motivate students</li>
+          <li style="font-size:13px;color:var(--text-secondary);display:flex;gap:8px;align-items:flex-start;"><span>✅</span> Publish courses to make them visible to students</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

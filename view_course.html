@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }}{% endblock %}
+{% block page_title %}{{ course.title }}{% endblock %}
+{% block page_subtitle %}{{ course.category_name }} • {{ course.level|capitalize }} Level{% endblock %}
+
+{% block content %}
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;">
+  <!-- Lessons -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa fa-list" style="color:var(--primary);margin-right:8px;"></i>Course Lessons</h3>
+        <span class="badge badge-primary">{{ lessons|length }} Lessons</span>
+      </div>
+      <div class="card-body">
+        {% if lessons %}
+          {% for lesson in lessons %}
+          <div style="border:1px solid var(--border-color);border-radius:var(--radius-md);padding:16px;margin-bottom:12px;transition:var(--transition);"
+               onmouseover="this.style.borderColor='rgba(108,99,255,0.4)'"
+               onmouseout="this.style.borderColor='var(--border-color)'">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div style="width:36px;height:36px;border-radius:50%;background:rgba(108,99,255,0.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--primary-light);flex-shrink:0;">
+                {{ lesson.lesson_order }}
+              </div>
+              <div style="flex:1;">
+                <div style="font-weight:600;font-size:15px;">{{ lesson.title }}</div>
+                {% if lesson.duration_minutes %}
+                <div style="font-size:12px;color:var(--text-muted);"><i class="fa fa-clock"></i> {{ lesson.duration_minutes }} min</div>
+                {% endif %}
+              </div>
+              {% if lesson.video_url %}
+              <a href="{{ lesson.video_url }}" target="_blank" class="btn btn-outline btn-sm">
+                <i class="fa fa-play"></i> Watch
+              </a>
+              {% endif %}
+            </div>
+            {% if lesson.content %}
+            <div style="margin-top:12px;padding:12px;background:var(--bg-card2);border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);line-height:1.6;">
+              {{ lesson.content }}
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        {% else %}
+        <div class="empty-state" style="padding:40px 0;">
+          <div class="empty-icon">📄</div>
+          <p>No lessons added yet. Check back soon!</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar Info -->
+  <div>
+    <!-- Course Info -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="card-body">
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">TRAINER</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <div class="user-avatar">{{ (course.trainer_name or 'T')[0]|upper }}</div>
+          <div>
+            <div style="font-weight:600;">{{ course.trainer_name or 'Unknown' }}</div>
+            <div style="font-size:12px;color:var(--text-muted);">Course Instructor</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span style="color:var(--text-muted);">Category</span>
+            <span style="font-weight:600;">{{ course.category_name or 'N/A' }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span style="color:var(--text-muted);">Level</span>
+            <span style="font-weight:600;">{{ course.level|capitalize }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span style="color:var(--text-muted);">Duration</span>
+            <span style="font-weight:600;">{{ course.duration_weeks }} weeks</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;">
+            <span style="color:var(--text-muted);">Your Progress</span>
+            <span style="font-weight:600;color:var(--primary-light);">{{ enrollment.progress_percent }}%</span>
+          </div>
+        </div>
+        <div style="margin-top:14px;">
+          <div class="progress">
+            <div class="progress-bar" style="width:{{ enrollment.progress_percent }}%;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Assignments -->
+    <div class="card">
+      <div class="card-header">
+        <h3><i class="fa fa-tasks" style="color:var(--warning);margin-right:8px;"></i>Assignments</h3>
+      </div>
+      <div class="card-body">
+        {% if assignments %}
+          {% for assignment in assignments %}
+          <div style="padding:12px;border:1px solid var(--border-color);border-radius:var(--radius-sm);margin-bottom:10px;">
+            <div style="font-weight:600;font-size:14px;margin-bottom:4px;">{{ assignment.title }}</div>
+            {% if assignment.due_date %}
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">
+              <i class="fa fa-calendar"></i> Due: {{ assignment.due_date.strftime('%b %d, %Y') if assignment.due_date else 'N/A' }}
+            </div>
+            {% endif %}
+            {% if assignment.sub_status == 'graded' %}
+              <span class="badge badge-success">✓ Graded: {{ assignment.marks_obtained }}/{{ assignment.max_marks }}</span>
+            {% elif assignment.sub_status == 'pending' %}
+              <span class="badge badge-warning">⏳ Submitted</span>
+            {% else %}
+              <span class="badge badge-danger">📝 Not Submitted</span>
+            {% endif %}
+          </div>
+          {% endfor %}
+        {% else %}
+        <div class="empty-state" style="padding:30px 0;">
+          <p>No assignments yet.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
